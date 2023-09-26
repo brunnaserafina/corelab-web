@@ -21,7 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [
@@ -49,5 +51,8 @@
   "engines": {
     "node": "^16.15.0",
     "npm": "^8.5.5"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
   }
 }
