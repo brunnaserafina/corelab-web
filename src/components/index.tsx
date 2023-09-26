@@ -1,4 +1,4 @@
-import Search from "./Search";
 import Navbar from "./Navbar";
+import CreateNote from "./Note/CreateNote";
 
-export { Search, Navbar };
+export { Navbar, CreateNote };

@@ -1,5 +1,11 @@
-import { Navbar } from "../components";
+import { CreateNote, Navbar } from "../components";
+import styles from "./Home.module.scss";
 
 export default function Home() {
-  return <Navbar />;
+  return (
+    <div className={styles.homepage}>
+      <Navbar />
+      <CreateNote />
+    </div>
+  );
 }
