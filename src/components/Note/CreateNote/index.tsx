@@ -1,11 +1,10 @@
 import { useState } from "react";
-import star from "../../../assets/images/icon-star.svg";
-import starSolid from "../../../assets/images/icon-star-solid.svg";
+import HeaderNote from "../HeaderNote";
+
 import styles from "./CreateNote.module.scss";
 
 export default function CreateNote() {
   const [text, setText] = useState("");
-  const [favorite, setFavorite] = useState(false);
 
   const handleTextareaChange = (e: any) => {
     const textarea = e.target;
@@ -17,16 +16,8 @@ export default function CreateNote() {
 
   return (
     <div className={styles.CreateNote}>
-      <div className={styles.HeaderNote}>
-        <h1>Título</h1>
-
-        <img
-          src={favorite ? starSolid : star}
-          alt="Favoritar"
-          onClick={() => setFavorite(!favorite)}
-        />
-      </div>
-
+      <HeaderNote />
+      
       <div className={styles.WriteNote}>
         <textarea
           placeholder="Criar nota..."
