@@ -16,8 +16,8 @@ export default function CreateNote() {
 
   return (
     <div className={styles.CreateNote}>
-      <HeaderNote />
-      
+      <HeaderNote disabledInput={false} />
+
       <div className={styles.WriteNote}>
         <textarea
           placeholder="Criar nota..."
