@@ -4,10 +4,28 @@ import styles from "./Home.module.scss";
 
 export default function Home() {
   return (
-    <div className={styles.homepage}>
+    <div className={styles.Homepage}>
       <Navbar />
+
       <CreateNote />
-      <CardNote />
+
+      <div className={styles.AllNotes}>
+        <h5>Favoritas</h5>
+        <div>
+          <CardNote />
+          <CardNote />
+          <CardNote />
+
+        </div>
+
+        <h5>Outras</h5>
+        <div>
+          <CardNote />
+          <CardNote />
+          <CardNote />
+          <CardNote />
+        </div>
+      </div>
     </div>
   );
 }

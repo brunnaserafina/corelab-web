@@ -1,7 +1,45 @@
-.homepage {
-  width: 100vw;
+@import "../assets/styles/break-points.scss";
+
+.Homepage {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  margin-bottom: 100px;
+
+  h5 {
+    font-size: 12px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 30px;
+    color: #464646;
+    font-weight: 500;
+  }
+}
+
+.AllNotes {
+  width: 90vw;
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+
+  @include laptop {
+    > div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @include desktop {
+    > div {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  @include desktop-large {
+    > div {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
 }
