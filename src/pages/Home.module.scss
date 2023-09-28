@@ -13,18 +13,30 @@
     margin-top: 30px;
     color: #464646;
     font-weight: 500;
+    width: 80%;
+
+    @include tablet {
+      width: 75%;
+    }
   }
 }
 
 .AllNotes {
   width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   > div {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 35px;
   }
 
   @include laptop {
+    display: inline;
+
     > div {
       display: grid;
       grid-template-columns: 1fr 1fr;
