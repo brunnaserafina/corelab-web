@@ -8,6 +8,7 @@ import { useState } from "react";
 export default function CardNote() {
   const [showPallete, setShowPallete] = useState<boolean>(false);
   const [colorClick, setColorClick] = useState<string>("#ffffff");
+  const [edit, setEdit] = useState<boolean>(false);
 
   const colors: string[] = [
     "#bae2ff",
@@ -24,25 +25,33 @@ export default function CardNote() {
     "#a99a7c",
   ];
 
+  function deleteNote() {
+    window.confirm("Tem certeza que deseja deletar essa nota?");
+  }
+
   return (
     <div style={{ backgroundColor: colorClick }} className={styles.CardNote}>
-      <HeaderNote />
+      <HeaderNote disabledInput={!edit} />
 
       <div className={styles.EditNote}>
-        <textarea name="" id="">
+        <textarea name="" id="" disabled={!edit}>
           Nota
         </textarea>
 
         <div className={styles.Tools}>
           <span>
-            <img src={iconEdit} alt="Editar nota" />
+            <img
+              src={iconEdit}
+              alt="Editar nota"
+              onClick={() => setEdit(!edit)}
+            />
             <img
               src={iconColor}
               alt="Colorir nota"
               onClick={() => setShowPallete(!showPallete)}
             />
           </span>
-          <img src={iconOut} alt="Excluir nota" />
+          <img src={iconOut} alt="Excluir nota" onClick={deleteNote} />
         </div>
       </div>
 
@@ -51,7 +60,10 @@ export default function CardNote() {
           {colors.map((color) => (
             <span
               style={{ backgroundColor: color }}
-              onClick={() => setColorClick(color)}
+              onClick={() => {
+                setColorClick(color);
+                setShowPallete(false);
+              }}
             ></span>
           ))}
         </div>
