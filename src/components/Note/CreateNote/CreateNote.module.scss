@@ -2,7 +2,7 @@
 @import "../../../assets/styles/break-points.scss";
 
 .CreateNote {
-  width: 80%;
+  width: 80vw;
   margin-top: 25px;
   background-color: white;
   border-radius: 25px;
@@ -11,7 +11,7 @@
   min-height: 105px;
 
   @include tablet {
-    width: 70%;
+    width: 70vw;
   }
 
   @include laptop {
