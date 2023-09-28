@@ -18,6 +18,7 @@ export default function HeaderNote(props: any) {
       <img
         src={favorite ? starSolid : star}
         alt="Favoritar"
+        title="Favoritar nota"
         onClick={() => setFavorite(!favorite)}
       />
     </div>

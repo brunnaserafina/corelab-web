@@ -43,15 +43,22 @@ export default function CardNote() {
             <img
               src={iconEdit}
               alt="Editar nota"
+              title="Editar nota"
               onClick={() => setEdit(!edit)}
             />
             <img
               src={iconColor}
               alt="Colorir nota"
+              title="Colorir nota"
               onClick={() => setShowPallete(!showPallete)}
             />
           </span>
-          <img src={iconOut} alt="Excluir nota" onClick={deleteNote} />
+          <img
+            src={iconOut}
+            alt="Excluir nota"
+            title="Excluir nota"
+            onClick={deleteNote}
+          />
         </div>
       </div>
 
