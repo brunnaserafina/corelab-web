@@ -3,12 +3,17 @@ import starSolid from "../../../assets/images/icon-star-solid.svg";
 import styles from "./HeaderNote.module.scss";
 import { useState } from "react";
 
-export default function HeaderNote() {
+export default function HeaderNote(props: any) {
   const [favorite, setFavorite] = useState(false);
 
   return (
     <div className={styles.HeaderNote}>
-      <h1>Título</h1>
+      <input
+        type="text"
+        value={props.value}
+        placeholder="Título"
+        disabled={props.disabledInput}
+      />
 
       <img
         src={favorite ? starSolid : star}

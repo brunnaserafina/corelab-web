@@ -6,13 +6,25 @@
   padding: 5px 20px;
   height: 40px;
 
-  h1 {
-    font-size: 14px;
-    color: #333333;
-  }
-
   img {
     width: 20px;
     cursor: pointer;
+  }
+
+  input {
+    border: none;
+    background-color: transparent;
+  }
+
+  h1,
+  input,
+  input::placeholder {
+    color: #333333;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  input:focus {
+    outline: none;
   }
 }
