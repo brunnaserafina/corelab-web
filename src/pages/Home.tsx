@@ -1,4 +1,5 @@
 import { CreateNote, Navbar } from "../components";
+import CardNote from "../components/Note/CardNote";
 import styles from "./Home.module.scss";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <div className={styles.homepage}>
       <Navbar />
       <CreateNote />
+      <CardNote />
     </div>
   );
 }
