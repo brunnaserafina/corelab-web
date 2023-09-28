@@ -1,11 +1,11 @@
-const API = "http://localhost:3333";
+import axios from "axios";
+import INote from "../types/INote";
 
-const endpoint = (path: string): string => API + path;
+const api = axios.create({
+  baseURL: "http://localhost:3333",
+});
 
-const get = async (path: string): Promise<any> => {
-  return fetch(endpoint(path)).then((res) => res.json());
-};
-
-export const getVehicles = async () => {
-  return get("/vehicles");
-};
+export async function postNote(body: INote) {
+  const promise = await api.post("/notes", body);
+  return promise.data;
+}

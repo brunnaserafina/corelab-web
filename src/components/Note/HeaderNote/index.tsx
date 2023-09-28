@@ -1,25 +1,34 @@
 import star from "../../../assets/images/icon-star.svg";
 import starSolid from "../../../assets/images/icon-star-solid.svg";
 import styles from "./HeaderNote.module.scss";
-import { useState } from "react";
+import INote from "../../../types/INote";
 
-export default function HeaderNote(props: any) {
-  const [favorite, setFavorite] = useState(false);
+interface HeaderProps {
+  note: INote;
+  disabledInput: boolean;
+  setNote: React.Dispatch<React.SetStateAction<INote>>;
+}
 
+export default function HeaderNote(props: HeaderProps) {
   return (
     <div className={styles.HeaderNote}>
       <input
         type="text"
-        value={props.value}
+        value={props.note.title}
         placeholder="Título"
         disabled={props.disabledInput}
+        onChange={(e) =>
+          props.setNote({ ...props.note, title: e.target.value })
+        }
       />
 
       <img
-        src={favorite ? starSolid : star}
+        src={props.note.favorite ? starSolid : star}
         alt="Favoritar"
         title="Favoritar nota"
-        onClick={() => setFavorite(!favorite)}
+        onClick={() =>
+          props.setNote({ ...props.note, favorite: !props.note.favorite })
+        }
       />
     </div>
   );
