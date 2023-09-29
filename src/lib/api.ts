@@ -39,3 +39,8 @@ export async function postFavorite(note_id: number) {
   const promise = await api.post("likes", { note_id });
   return promise;
 }
+
+export async function editNote(body: INote){
+  const promise = await api.put(`/notes/${body.id}`, body);
+  return promise.data;
+}

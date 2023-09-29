@@ -1,15 +1,37 @@
+import { useRef, useState } from "react";
 import HeaderNote from "../HeaderNote";
 import styles from "./CardNote.module.scss";
 import iconEdit from "../../../assets/images/icon-edit.svg";
 import iconColor from "../../../assets/images/icon-color.svg";
 import iconOut from "../../../assets/images/icon-out.svg";
-import { useState } from "react";
 import INote from "../../../types/INote";
-import { deleteNote, editColorNote } from "../../../lib/api";
+import { deleteNote, editColorNote, editNote } from "../../../lib/api";
 
-export default function CardNote(props: any) {
+interface CardNoteProps {
+  note: INote;
+  favorite: boolean;
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const colors = [
+  { code: "#bae2ff", name: "Azul claro" },
+  { code: "#b9ffdd", name: "Creme de Hortelã" },
+  { code: "#ffe8ac", name: "Champanhe" },
+  { code: "#ffcab9", name: "Pêssego" },
+  { code: "#f99494", name: "Salmão Claro" },
+  { code: "#eca1ff", name: "Lavanda" },
+  { code: "#daff8b", name: "Verde Neon" },
+  { code: "#ffa285", name: "Melão" },
+  { code: "#cdcdcd", name: "Cinza Claro" },
+  { code: "#979797", name: "Cinza" },
+  { code: "#a99a7c", name: "Caqui" },
+];
+
+export default function CardNote(props: CardNoteProps) {
   const [edit, setEdit] = useState<boolean>(false);
   const [showPallete, setShowPallete] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const [note, setNote] = useState<INote>({
     id: props.note?.id,
     title: props.note?.title,
@@ -18,38 +40,48 @@ export default function CardNote(props: any) {
     color: props.note?.color,
   });
 
-  const colors: any[] = [
-    { code: "#bae2ff", name: "Azul claro" },
-    { code: "#b9ffdd", name: "Creme de Hortelã" },
-    { code: "#ffe8ac", name: "Champanhe" },
-    { code: "#ffcab9", name: "Pêssego" },
-    { code: "#f99494", name: "Salmão Claro" },
-    { code: "#eca1ff", name: "Lavanda" },
-    { code: "#daff8b", name: "Verde Neon" },
-    { code: "#ffa285", name: "Melão" },
-    { code: "#cdcdcd", name: "Cinza Claro" },
-    { code: "#979797", name: "Cinza" },
-    { code: "#a99a7c", name: "Caqui" },
-  ];
-
   async function handleDeleteNote() {
-    if (window.confirm("Tem certeza que deseja deletar essa nota?")) {
+    if (
+      window.confirm("Tem certeza que deseja deletar essa nota?") &&
+      props.note.id
+    ) {
       await deleteNote(props.note.id);
       props.setUpdate((update: boolean) => !update);
     }
   }
 
   async function handleEditColorNote(color: string) {
-    setNote({ ...note, color });
+    const updatedNote = { ...props.note, color };
+    setNote(updatedNote);
     setShowPallete(false);
-    await editColorNote(props.note.id, { ...note, color });
-    props.setUpdate((update: boolean) => !update);
+
+    try {
+      if (props.note.id) {
+        await editColorNote(props.note.id, updatedNote);
+        props.setUpdate((update) => !update);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      try {
+        await editNote(props.note);
+        props.setUpdate((update) => !update);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   return (
     <div style={{ backgroundColor: note.color }} className={styles.CardNote}>
       <HeaderNote
-        disabledInput={false}
+        disabledInput={!edit}
         note={note}
         setNote={setNote}
         setUpdate={props.setUpdate}
@@ -57,11 +89,11 @@ export default function CardNote(props: any) {
 
       <div className={styles.EditNote}>
         <textarea
-          name=""
-          id=""
           disabled={!edit}
           defaultValue={note.content}
-          autoFocus
+          onChange={(e) => setNote({ ...note, content: e.target.value })}
+          onKeyDown={handleKeyDown}
+          ref={textareaRef}
         />
 
         <div className={styles.Tools}>

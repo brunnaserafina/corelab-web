@@ -4,7 +4,11 @@ import INote from "../../../types/INote";
 import HeaderNote from "../HeaderNote";
 import styles from "./CreateNote.module.scss";
 
-export default function CreateNote(props: any) {
+interface CreateNoteProps {
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function CreateNote(props: CreateNoteProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [note, setNote] = useState<INote>({
     title: "",
@@ -27,19 +31,21 @@ export default function CreateNote(props: any) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
 
-      postNote(note);
+      try {
+        await postNote(note);
+        setNote({
+          title: "",
+          content: "",
+          color: "#ffffff",
+          favorite: false,
+        });
+        props.setUpdate((update) => !update);
 
-      setNote({
-        title: "",
-        content: "",
-        color: "#ffffff",
-        favorite: false,
-      });
-
-      props.setUpdate((update: boolean) => !update);
-
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "15px";
+        if (textareaRef.current) {
+          textareaRef.current.style.height = "15px";
+        }
+      } catch (err) {
+        console.error(err);
       }
     }
   }
@@ -50,6 +56,7 @@ export default function CreateNote(props: any) {
         disabledInput={false}
         note={note}
         setNote={setNote}
+        setUpdate={props.setUpdate}
       />
 
       <div className={styles.WriteNote}>
