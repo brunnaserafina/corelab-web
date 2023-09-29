@@ -19,3 +19,8 @@ export async function getFavoriteNotes() {
   const promise = await api.get("/favorites");
   return promise.data;
 }
+
+export async function deleteNote(id: number){
+  const promise = await api.delete(`/notes/${id}`);
+  return promise;
+}

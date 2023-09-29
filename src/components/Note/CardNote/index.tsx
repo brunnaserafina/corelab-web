@@ -4,11 +4,18 @@ import iconEdit from "../../../assets/images/icon-edit.svg";
 import iconColor from "../../../assets/images/icon-color.svg";
 import iconOut from "../../../assets/images/icon-out.svg";
 import { useState } from "react";
+import INote from "../../../types/INote";
+import { deleteNote } from "../../../lib/api";
 
-export default function CardNote() {
-  const [showPallete, setShowPallete] = useState<boolean>(false);
-  const [colorClick, setColorClick] = useState<string>("#ffffff");
+export default function CardNote(props: any) {
   const [edit, setEdit] = useState<boolean>(false);
+  const [showPallete, setShowPallete] = useState<boolean>(false);
+  const [note, setNote] = useState<INote>({
+    title: props.note?.title,
+    content: props.note?.content,
+    favorite: props.favorite,
+    color: props.note?.color,
+  });
 
   const colors: string[] = [
     "#bae2ff",
@@ -25,18 +32,25 @@ export default function CardNote() {
     "#a99a7c",
   ];
 
-  function deleteNote() {
-    window.confirm("Tem certeza que deseja deletar essa nota?");
+  async function handleDeleteNote() {
+    if (window.confirm("Tem certeza que deseja deletar essa nota?")) {
+      await deleteNote(props.note.id);
+      props.setUpdate((update: boolean) => !update);
+    }
   }
 
   return (
-    <div style={{ backgroundColor: colorClick }} className={styles.CardNote}>
-      <HeaderNote disabledInput={!edit} />
+    <div style={{ backgroundColor: note.color }} className={styles.CardNote}>
+      <HeaderNote disabledInput={false} note={note} setNote={setNote} />
 
       <div className={styles.EditNote}>
-        <textarea name="" id="" disabled={!edit}>
-          Nota
-        </textarea>
+        <textarea
+          name=""
+          id=""
+          disabled={!edit}
+          defaultValue={note.content}
+          autoFocus
+        />
 
         <div className={styles.Tools}>
           <span>
@@ -57,7 +71,7 @@ export default function CardNote() {
             src={iconOut}
             alt="Excluir nota"
             title="Excluir nota"
-            onClick={deleteNote}
+            onClick={handleDeleteNote}
           />
         </div>
       </div>
@@ -68,7 +82,7 @@ export default function CardNote() {
             <span
               style={{ backgroundColor: color }}
               onClick={() => {
-                setColorClick(color);
+                setNote({ ...note, color });
                 setShowPallete(false);
               }}
             ></span>

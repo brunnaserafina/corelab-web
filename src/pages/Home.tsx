@@ -34,15 +34,25 @@ export default function Home() {
       <div className={styles.AllNotes}>
         <h5>Favoritas</h5>
         <div>
-          {favoriteNotes.map((note, index) => (
-            <CardNote key={index} favorite={true} note={note} />
+          {favoriteNotes.map((note) => (
+            <CardNote
+              key={note.id}
+              favorite={true}
+              note={note}
+              setUpdate={setUpdate}
+            />
           ))}
         </div>
 
         <h5>Outras</h5>
         <div>
-          {otherNotes.map((note, index) => (
-            <CardNote key={index} favorite={false} note={note} />
+          {otherNotes.map((note) => (
+            <CardNote
+              key={note.id}
+              favorite={false}
+              note={note}
+              setUpdate={setUpdate}
+            />
           ))}
         </div>
       </div>
