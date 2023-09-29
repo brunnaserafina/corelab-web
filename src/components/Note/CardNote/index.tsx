@@ -5,7 +5,7 @@ import iconColor from "../../../assets/images/icon-color.svg";
 import iconOut from "../../../assets/images/icon-out.svg";
 import { useState } from "react";
 import INote from "../../../types/INote";
-import { deleteNote } from "../../../lib/api";
+import { deleteNote, editColorNote } from "../../../lib/api";
 
 export default function CardNote(props: any) {
   const [edit, setEdit] = useState<boolean>(false);
@@ -37,6 +37,13 @@ export default function CardNote(props: any) {
       await deleteNote(props.note.id);
       props.setUpdate((update: boolean) => !update);
     }
+  }
+
+  async function handleEditColorNote(color: string) {
+    setNote({ ...note, color });
+    setShowPallete(false);
+    await editColorNote(props.note.id, { ...note, color });
+    props.setUpdate((update: boolean) => !update);
   }
 
   return (
@@ -81,10 +88,7 @@ export default function CardNote(props: any) {
           {colors.map((color) => (
             <span
               style={{ backgroundColor: color }}
-              onClick={() => {
-                setNote({ ...note, color });
-                setShowPallete(false);
-              }}
+              onClick={() => handleEditColorNote(color)}
             ></span>
           ))}
         </div>

@@ -20,7 +20,12 @@ export async function getFavoriteNotes() {
   return promise.data;
 }
 
-export async function deleteNote(id: number){
+export async function deleteNote(id: number) {
   const promise = await api.delete(`/notes/${id}`);
+  return promise;
+}
+
+export async function editColorNote(id: number, note: INote) {
+  const promise = await api.put(`/notes/${id}`, note);
   return promise;
 }
