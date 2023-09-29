@@ -17,19 +17,18 @@ export default function CardNote(props: any) {
     color: props.note?.color,
   });
 
-  const colors: string[] = [
-    "#bae2ff",
-    "#b9ffdd",
-    "#ffe8ac",
-    "#ffcab9",
-    "#f99494",
-    "#9dd6ff",
-    "#eca1ff",
-    "#daff8b",
-    "#ffa285",
-    "#cdcdcd",
-    "#979797",
-    "#a99a7c",
+  const colors: any[] = [
+    { code: "#bae2ff", name: "Azul claro" },
+    { code: "#b9ffdd", name: "Creme de Hortelã" },
+    { code: "#ffe8ac", name: "Champanhe" },
+    { code: "#ffcab9", name: "Pêssego" },
+    { code: "#f99494", name: "Salmão Claro" },
+    { code: "#eca1ff", name: "Lavanda" },
+    { code: "#daff8b", name: "Verde Neon" },
+    { code: "#ffa285", name: "Melão" },
+    { code: "#cdcdcd", name: "Cinza Claro" },
+    { code: "#979797", name: "Cinza" },
+    { code: "#a99a7c", name: "Caqui" },
   ];
 
   async function handleDeleteNote() {
@@ -87,8 +86,9 @@ export default function CardNote(props: any) {
         <div className={styles.Pallete}>
           {colors.map((color) => (
             <span
-              style={{ backgroundColor: color }}
-              onClick={() => handleEditColorNote(color)}
+              style={{ backgroundColor: color.code }}
+              title={color.name}
+              onClick={() => handleEditColorNote(color.code)}
             ></span>
           ))}
         </div>
