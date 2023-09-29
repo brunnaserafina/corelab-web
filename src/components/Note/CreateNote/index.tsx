@@ -4,7 +4,7 @@ import INote from "../../../types/INote";
 import HeaderNote from "../HeaderNote";
 import styles from "./CreateNote.module.scss";
 
-export default function CreateNote() {
+export default function CreateNote(props: any) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [note, setNote] = useState<INote>({
     title: "",
@@ -36,6 +36,8 @@ export default function CreateNote() {
         favorite: false,
       });
 
+      props.setUpdate((update: boolean) => !update);
+
       if (textareaRef.current) {
         textareaRef.current.style.height = "15px";
       }
@@ -44,7 +46,11 @@ export default function CreateNote() {
 
   return (
     <div className={styles.CreateNote}>
-      <HeaderNote disabledInput={false} note={note} setNote={setNote} />
+      <HeaderNote
+        disabledInput={false}
+        note={note}
+        setNote={setNote}
+      />
 
       <div className={styles.WriteNote}>
         <textarea

@@ -29,3 +29,13 @@ export async function editColorNote(id: number, note: INote) {
   const promise = await api.put(`/notes/${id}`, note);
   return promise;
 }
+
+export async function deleteFavorite(note_id: number) {
+  const promise = await api.delete(`likes/${note_id}`);
+  return promise;
+}
+
+export async function postFavorite(note_id: number) {
+  const promise = await api.post("likes", { note_id });
+  return promise;
+}

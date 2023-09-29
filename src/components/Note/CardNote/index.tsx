@@ -11,6 +11,7 @@ export default function CardNote(props: any) {
   const [edit, setEdit] = useState<boolean>(false);
   const [showPallete, setShowPallete] = useState<boolean>(false);
   const [note, setNote] = useState<INote>({
+    id: props.note?.id,
     title: props.note?.title,
     content: props.note?.content,
     favorite: props.favorite,
@@ -47,7 +48,12 @@ export default function CardNote(props: any) {
 
   return (
     <div style={{ backgroundColor: note.color }} className={styles.CardNote}>
-      <HeaderNote disabledInput={false} note={note} setNote={setNote} />
+      <HeaderNote
+        disabledInput={false}
+        note={note}
+        setNote={setNote}
+        setUpdate={props.setUpdate}
+      />
 
       <div className={styles.EditNote}>
         <textarea
