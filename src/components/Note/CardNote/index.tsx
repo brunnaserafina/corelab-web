@@ -40,6 +40,26 @@ export default function CardNote(props: CardNoteProps) {
     }
   }
 
+  const activateEdit = async () => {
+    if (!edit) {
+      await setEdit(true);
+
+      if (textareaRef.current && !textareaRef.current.disabled) {
+        const textLength = textareaRef.current.value.length;
+        textareaRef.current.setSelectionRange(textLength, textLength);
+        textareaRef.current.focus();
+      }
+    } else {
+      await setEdit(false);
+      try {
+        await editNote(note);
+        props.setUpdate((update) => !update);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   async function handleEditColorNote(color: string) {
     const updatedNote = { ...props.note, color };
     setNote(updatedNote);
@@ -104,11 +124,11 @@ export default function CardNote(props: CardNoteProps) {
 
       <div className={styles.EditNote}>
         <textarea
+          ref={textareaRef}
           disabled={!edit}
           defaultValue={note.content}
           onChange={(e) => setNote({ ...note, content: e.target.value })}
           onKeyDown={handleKeyDown}
-          ref={textareaRef}
         />
 
         <div className={styles.Tools}>
@@ -122,7 +142,7 @@ export default function CardNote(props: CardNoteProps) {
                 src={iconEdit}
                 alt="Editar nota"
                 title="Editar nota"
-                onClick={() => setEdit(!edit)}
+                onClick={activateEdit}
               />
             </span>
             <span
