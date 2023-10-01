@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HeaderNote from "../HeaderNote";
 import styles from "./CardNote.module.scss";
 import iconEdit from "../../../assets/images/icon-edit.svg";
@@ -20,6 +20,7 @@ export default function CardNote(props: CardNoteProps) {
   const [showPallete, setShowPallete] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const palleteRef = useRef<HTMLDivElement | null>(null);
 
   const [note, setNote] = useState<INote>({
     id: props.note?.id,
@@ -70,6 +71,18 @@ export default function CardNote(props: CardNoteProps) {
   function closeModal() {
     setModalIsOpen(false);
   }
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (palleteRef.current && !palleteRef.current.contains(event.target)) {
+        setShowPallete(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div style={{ backgroundColor: note.color }} className={styles.CardNote}>
@@ -132,7 +145,7 @@ export default function CardNote(props: CardNoteProps) {
       </div>
 
       {showPallete && (
-        <div className={styles.Pallete}>
+        <div className={styles.Pallete} ref={palleteRef}>
           {colors.map((color) => (
             <span
               key={color.code}
