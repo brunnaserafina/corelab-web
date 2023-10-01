@@ -1,7 +1,9 @@
+@import "../../assets/styles/break-points.scss";
+
 .Navbar {
   display: flex;
   justify-content: space-between;
-  padding: 15px 25px;
+  padding: 15px 35px;
   box-sizing: border-box;
   height: 60px;
   background-color: white;
@@ -24,4 +26,25 @@
 .Icon {
   width: 15px;
   cursor: pointer;
+}
+
+.Logo {
+  cursor: pointer;
+  background-color: white;
+  height: 60px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 0;
+
+  @include tablet {
+    height: 60px;
+    width: 60px;
+  }
+
+  img {
+    width: 20px;
+  }
 }
