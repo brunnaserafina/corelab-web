@@ -11,9 +11,14 @@
     cursor: pointer;
   }
 
+  img:hover {
+    transform: scale(1.1);
+  }
+
   input {
     border: none;
     background-color: transparent;
+    width: 100%;
   }
 
   h1,

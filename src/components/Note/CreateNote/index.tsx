@@ -16,6 +16,7 @@ export default function CreateNote(props: CreateNoteProps) {
     favorite: false,
     color: "#ffffff", //default color
   });
+  const [favorite, setFavorite] = useState<boolean>(note.favorite);
 
   function handleTextareaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     //adapt textarea height
@@ -31,21 +32,25 @@ export default function CreateNote(props: CreateNoteProps) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
 
-      try {
-        await postNote(note);
-        setNote({
-          title: "",
-          content: "",
-          color: "#ffffff",
-          favorite: false,
-        });
-        props.setUpdate((update) => !update);
+      if (e.currentTarget.innerHTML) {
+        try {
+          await postNote(note);
+          setNote({
+            title: "",
+            content: "",
+            color: "#ffffff",
+            favorite: false,
+          });
+          props.setUpdate((update) => !update);
 
-        if (textareaRef.current) {
-          textareaRef.current.style.height = "15px";
+          if (textareaRef.current) {
+            textareaRef.current.style.height = "15px";
+          }
+
+          setFavorite(false);
+        } catch (err) {
+          console.error(err);
         }
-      } catch (err) {
-        console.error(err);
       }
     }
   }
@@ -57,6 +62,8 @@ export default function CreateNote(props: CreateNoteProps) {
         note={note}
         setNote={setNote}
         setUpdate={props.setUpdate}
+        favorite={favorite}
+        setFavorite={setFavorite}
       />
 
       <div className={styles.WriteNote}>
@@ -66,6 +73,8 @@ export default function CreateNote(props: CreateNoteProps) {
           onChange={handleTextareaChange}
           onKeyDown={handleKeyDown}
           ref={textareaRef}
+          minLength={1}
+          required
         />
       </div>
     </div>

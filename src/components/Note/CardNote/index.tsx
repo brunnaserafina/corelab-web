@@ -6,26 +6,13 @@ import iconColor from "../../../assets/images/icon-color.svg";
 import iconOut from "../../../assets/images/icon-out.svg";
 import INote from "../../../types/INote";
 import { deleteNote, editColorNote, editNote } from "../../../lib/api";
+import { colors } from "../../../utils/colors";
 
 interface CardNoteProps {
   note: INote;
   favorite: boolean;
   setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const colors = [
-  { code: "#bae2ff", name: "Azul claro" },
-  { code: "#b9ffdd", name: "Creme de Hortelã" },
-  { code: "#ffe8ac", name: "Champanhe" },
-  { code: "#ffcab9", name: "Pêssego" },
-  { code: "#f99494", name: "Salmão Claro" },
-  { code: "#eca1ff", name: "Lavanda" },
-  { code: "#daff8b", name: "Verde Neon" },
-  { code: "#ffa285", name: "Melão" },
-  { code: "#cdcdcd", name: "Cinza Claro" },
-  { code: "#979797", name: "Cinza" },
-  { code: "#a99a7c", name: "Caqui" },
-];
 
 export default function CardNote(props: CardNoteProps) {
   const [edit, setEdit] = useState<boolean>(false);
@@ -39,6 +26,8 @@ export default function CardNote(props: CardNoteProps) {
     favorite: props.favorite,
     color: props.note?.color,
   });
+
+  const [favorite, setFavorite] = useState<boolean>(note.favorite);
 
   async function handleDeleteNote() {
     if (
@@ -70,8 +59,9 @@ export default function CardNote(props: CardNoteProps) {
       e.preventDefault();
 
       try {
-        await editNote(props.note);
+        await editNote(note);
         props.setUpdate((update) => !update);
+        setEdit(false);
       } catch (err) {
         console.error(err);
       }
@@ -85,6 +75,9 @@ export default function CardNote(props: CardNoteProps) {
         note={note}
         setNote={setNote}
         setUpdate={props.setUpdate}
+        favorite={favorite}
+        setFavorite={setFavorite}
+        setEdit={setEdit}
       />
 
       <div className={styles.EditNote}>
@@ -98,19 +91,34 @@ export default function CardNote(props: CardNoteProps) {
 
         <div className={styles.Tools}>
           <span>
-            <img
-              src={iconEdit}
-              alt="Editar nota"
-              title="Editar nota"
-              onClick={() => setEdit(!edit)}
-            />
-            <img
-              src={iconColor}
-              alt="Colorir nota"
-              title="Colorir nota"
-              onClick={() => setShowPallete(!showPallete)}
-            />
+            <span
+              style={{
+                backgroundColor: edit ? "#FFE3B3" : "transparent",
+              }}
+            >
+              <img
+                src={iconEdit}
+                alt="Editar nota"
+                title="Editar nota"
+                onClick={() => setEdit(!edit)}
+              />
+            </span>
+            <span
+              style={{
+                backgroundColor: showPallete ? "#FFE3B3" : "transparent",
+              }}
+            >
+              <img
+                src={iconColor}
+                alt="Colorir nota"
+                title="Colorir nota"
+                onClick={() => {
+                  setShowPallete(!showPallete);
+                }}
+              />
+            </span>
           </span>
+
           <img
             src={iconOut}
             alt="Excluir nota"
@@ -124,6 +132,7 @@ export default function CardNote(props: CardNoteProps) {
         <div className={styles.Pallete}>
           {colors.map((color) => (
             <span
+              key={color.code}
               style={{ backgroundColor: color.code }}
               title={color.name}
               onClick={() => handleEditColorNote(color.code)}
