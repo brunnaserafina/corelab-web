@@ -7,6 +7,7 @@ import iconOut from "../../../assets/images/icon-out.svg";
 import INote from "../../../types/INote";
 import { deleteNote, editColorNote, editNote } from "../../../lib/api";
 import { colors } from "../../../utils/colors";
+import Modal from "react-modal";
 
 interface CardNoteProps {
   note: INote;
@@ -18,6 +19,7 @@ export default function CardNote(props: CardNoteProps) {
   const [edit, setEdit] = useState<boolean>(false);
   const [showPallete, setShowPallete] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [note, setNote] = useState<INote>({
     id: props.note?.id,
@@ -30,10 +32,7 @@ export default function CardNote(props: CardNoteProps) {
   const [favorite, setFavorite] = useState<boolean>(note.favorite);
 
   async function handleDeleteNote() {
-    if (
-      window.confirm("Tem certeza que deseja deletar essa nota?") &&
-      props.note.id
-    ) {
+    if (props.note.id) {
       await deleteNote(props.note.id);
       props.setUpdate((update: boolean) => !update);
     }
@@ -66,6 +65,10 @@ export default function CardNote(props: CardNoteProps) {
         console.error(err);
       }
     }
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
   }
 
   return (
@@ -123,7 +126,7 @@ export default function CardNote(props: CardNoteProps) {
             src={iconOut}
             alt="Excluir nota"
             title="Excluir nota"
-            onClick={handleDeleteNote}
+            onClick={() => setModalIsOpen(true)}
           />
         </div>
       </div>
@@ -140,6 +143,19 @@ export default function CardNote(props: CardNoteProps) {
           ))}
         </div>
       )}
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+        className={styles.ModalDelete}
+      >
+        <h4>Tem certeza que deseja excluir essa nota?</h4>
+        <div>
+          <button onClick={closeModal}>cancelar</button>
+          <button onClick={handleDeleteNote}>excluir</button>
+        </div>
+      </Modal>
     </div>
   );
 }
