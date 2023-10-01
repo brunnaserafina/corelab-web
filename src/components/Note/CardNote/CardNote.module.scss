@@ -9,6 +9,18 @@
   border: 1px solid #d9d9d9;
   height: 440px;
   box-sizing: border-box;
+  animation: fadeIn 0.1s ease-in-out;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @include tablet {
     width: 70vw;
@@ -110,6 +122,18 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
   height: max-content;
   z-index: 2;
+  animation: fadeIn 0.25s ease-in-out;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   span {
     display: block;

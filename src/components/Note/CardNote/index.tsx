@@ -21,6 +21,7 @@ export default function CardNote(props: CardNoteProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const palleteRef = useRef<HTMLDivElement | null>(null);
+  const editColorRef = useRef<HTMLDivElement | null>(null);
 
   const [note, setNote] = useState<INote>({
     id: props.note?.id,
@@ -74,7 +75,12 @@ export default function CardNote(props: CardNoteProps) {
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (palleteRef.current && !palleteRef.current.contains(event.target)) {
+      if (
+        palleteRef.current &&
+        editColorRef.current &&
+        !palleteRef.current.contains(event.target) &&
+        !editColorRef.current.contains(event.target)
+      ) {
         setShowPallete(false);
       }
     }
@@ -123,6 +129,7 @@ export default function CardNote(props: CardNoteProps) {
               style={{
                 backgroundColor: showPallete ? "#FFE3B3" : "transparent",
               }}
+              ref={editColorRef}
             >
               <img
                 src={iconColor}
