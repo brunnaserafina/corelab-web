@@ -5,9 +5,23 @@ import Search from "../Search";
 import styles from "./Navbar.module.scss";
 import { useState } from "react";
 
-export default function Navbar(props: any) {
-  const [search, setSearch] = useState<string>();
+interface NavbarProps {
+  onSearchChange: (search: string) => void;
+}
+
+export default function Navbar(props: NavbarProps) {
+  const [search, setSearch] = useState<string>("");
   const [showNavbar, setShowNavbar] = useState<boolean>(true);
+
+  function handleSearchNote(e: any) {
+    setSearch(e.target.value);
+
+    if (e.target.value.length > 0) {
+      props.onSearchChange(search);
+    } else {
+      props.onSearchChange("");
+    }
+  }
 
   return (
     <>
@@ -21,9 +35,7 @@ export default function Navbar(props: any) {
             <Search
               placeholder="Pesquisar notas"
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
+              onChange={handleSearchNote}
             />
           </div>
 

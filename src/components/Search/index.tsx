@@ -1,5 +1,7 @@
 import styles from "./Search.module.scss";
 import iconSearch from "../../assets/images/icon-search.svg";
+import { DebounceInput } from "react-debounce-input";
+import { useState } from "react";
 
 interface ISearch {
   placeholder: string;
@@ -8,9 +10,23 @@ interface ISearch {
 }
 
 const Search = (props: ISearch) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
-    <div className={styles.Search}>
-      <input type="text" placeholder={props.placeholder} value={props.value} />
+    <div
+      className={styles.Search}
+      style={{ border: isFocused ? "1px solid #ffb60d" : "" }}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+    >
+      <DebounceInput
+        minLength={1}
+        debounceTimeout={150}
+        value={props.value}
+        type="text"
+        placeholder={props.placeholder}
+        onChange={props.onChange}
+      />
       <img src={iconSearch} alt="Lupa" />
     </div>
   );

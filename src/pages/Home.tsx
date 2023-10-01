@@ -3,36 +3,66 @@ import { CreateNote, Navbar } from "../components";
 import CardNote from "../components/Note/CardNote";
 import { getFavoriteNotes, getOtherNotes } from "../lib/api";
 import INote from "../types/INote";
+import { colors } from "../utils/colors";
 import styles from "./Home.module.scss";
 
 export default function Home() {
   const [otherNotes, setOtherNotes] = useState<INote[]>([]);
   const [favoriteNotes, setFavoriteNotes] = useState<INote[]>([]);
   const [update, setUpdate] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     async function fetchData() {
       try {
         const favoriteNotesData = await getFavoriteNotes();
         const otherNotesData = await getOtherNotes();
-        setOtherNotes(otherNotesData);
-        setFavoriteNotes(favoriteNotesData);
+
+        const colorMatch = colors.filter((color) =>
+          color.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+
+        const filterFavoriteNotes = favoriteNotesData.filter(
+          (note: INote) =>
+            colorMatch.some(
+              (color) => note.color.toLowerCase() === color.code.toLowerCase(),
+            ) ||
+            note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            note.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+
+        const filterOtherNotes = otherNotesData.filter(
+          (note: INote) =>
+            colorMatch.some(
+              (color) => note.color.toLowerCase() === color.code.toLowerCase(),
+            ) ||
+            note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            note.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+
+        setFavoriteNotes(filterFavoriteNotes);
+        setOtherNotes(filterOtherNotes);
+
+        if (searchTerm.length === 0) {
+          setFavoriteNotes(favoriteNotesData);
+          setOtherNotes(otherNotesData);
+        }
       } catch (err) {
         console.error(err);
       }
     }
 
     fetchData();
-  }, [update]);
+  }, [update, searchTerm]);
 
   return (
     <div className={styles.Homepage}>
-      <Navbar />
+      <Navbar onSearchChange={setSearchTerm} />
 
       <CreateNote setUpdate={setUpdate} />
 
       <div className={styles.AllNotes}>
-        <h5>Favoritas</h5>
+        {favoriteNotes.length > 0 && <h5>Favoritas</h5>}
         <div>
           {favoriteNotes.map((note) => (
             <CardNote
@@ -44,7 +74,7 @@ export default function Home() {
           ))}
         </div>
 
-        <h5>Outras</h5>
+        {otherNotes.length > 0 && <h5>Outras</h5>}
         <div>
           {otherNotes.map((note) => (
             <CardNote
