@@ -2,7 +2,7 @@ import axios from "axios";
 import INote from "../types/INote";
 
 const api = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: "http://localhost:3333/api",
 });
 
 export async function postNote(body: INote) {
@@ -20,27 +20,28 @@ export async function getFavoriteNotes() {
   return promise.data;
 }
 
-export async function deleteNote(id: number) {
-  const promise = await api.delete(`/notes/${id}`);
+export async function deleteNote(id: string) {
+  console.log(typeof id);
+  const promise = await api.delete(`/notes/${String(id)}`);
   return promise;
 }
 
-export async function editColorNote(id: number, note: INote) {
-  const promise = await api.put(`/notes/${id}`, note);
+export async function editColorNote(id: string, note: INote) {
+  const promise = await api.put(`/notes/color/${id}`, { color: note.color });
   return promise;
 }
 
-export async function deleteFavorite(note_id: number) {
-  const promise = await api.delete(`likes/${note_id}`);
+export async function deleteFavorite(note_id: string) {
+  const promise = await api.delete(`/favorites/${note_id}`);
   return promise;
 }
 
-export async function postFavorite(note_id: number) {
-  const promise = await api.post("likes", { note_id });
+export async function postFavorite(note_id: string) {
+  const promise = await api.post(`/favorites/${note_id}`);
   return promise;
 }
 
-export async function editNote(body: INote){
-  const promise = await api.put(`/notes/${body.id}`, body);
+export async function editNote(body: INote) {
+  const promise = await api.put("/notes", body);
   return promise.data;
 }
