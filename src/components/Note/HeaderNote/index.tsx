@@ -1,13 +1,8 @@
 import star from "../../../assets/images/icon-star.svg";
+import { deleteFavorite, editNote,postFavorite, postNote } from "../../../lib/api";
+import INote from "../../../types/INote";
 import starSolid from "../../../assets/images/icon-star-solid.svg";
 import styles from "./HeaderNote.module.scss";
-import INote from "../../../types/INote";
-import {
-  deleteFavorite,
-  editNote,
-  postFavorite,
-  postNote,
-} from "../../../lib/api";
 
 interface HeaderNoteProps {
   note: INote;
@@ -32,41 +27,44 @@ export default function HeaderNote(props: HeaderNoteProps) {
         }
         props.setUpdate((update: boolean) => !update);
       } catch (error) {
-        console.error(error);
+        console.log("Erro ao favoritar a nota. Tente novamente.")
       }
     } else {
-      if (props.favorite) {
-        props.setFavorite(false);
-        props.setNote({ ...props.note, favorite: false });
-      } else {
-        props.setFavorite(true);
-        props.setNote({ ...props.note, favorite: true });
-      }
+      const newFavoriteValue = !props.favorite;
+      props.setFavorite(newFavoriteValue);
+      props.setNote({ ...props.note, favorite: newFavoriteValue });
     }
   }
+
+  async function handleSaveNote() {
+    try {
+      if (props.note.id !== undefined && props.setEdit) {
+        await editNote(props.note);
+        props.setEdit(false);
+      } else {
+        await postNote(props.note);
+        props.setNote({
+          ...props.note,
+          title: "",
+          content: "",
+          favorite: false,
+        });
+        props.setFavorite(false);
+      }
+      props.setUpdate((update: boolean) => !update);
+    } catch (error) {
+      console.error("Erro ao salvar a nota:", error);
+    }
+  }
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.setNote({ ...props.note, title: e.target.value });
+  };
 
   async function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-
-      try {
-        if (props.note.id !== undefined && props.setEdit) {
-          await editNote(props.note);
-          props.setEdit(false);
-        } else {
-          await postNote(props.note);
-          props.setNote({
-            ...props.note,
-            title: "",
-            content: "",
-            favorite: false,
-          });
-          props.setFavorite(false);
-        }
-        props.setUpdate((update: boolean) => !update);
-      } catch (error) {
-        console.error("Erro ao salvar a nota:", error);
-      }
+      handleSaveNote();
     }
   }
 
@@ -77,9 +75,7 @@ export default function HeaderNote(props: HeaderNoteProps) {
         value={props.note.title}
         placeholder="Título"
         disabled={props.disabledInput}
-        onChange={(e) =>
-          props.setNote({ ...props.note, title: e.target.value })
-        }
+        onChange={handleTitleChange}
         onKeyDown={handleKeyDown}
       />
 

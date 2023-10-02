@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
+import { HeaderNote } from "../../../components";
 import { postNote } from "../../../lib/api";
 import INote from "../../../types/INote";
-import HeaderNote from "../HeaderNote";
 import styles from "./CreateNote.module.scss";
 
 interface CreateNoteProps {
@@ -9,14 +9,28 @@ interface CreateNoteProps {
 }
 
 export default function CreateNote(props: CreateNoteProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [note, setNote] = useState<INote>({
+  const initialNoteState: INote = {
     title: "",
     content: "",
     favorite: false,
-    color: "#ffffff", //default color
-  });
+    color: "#ffffff",
+  };
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [note, setNote] = useState<INote>(initialNoteState);
   const [favorite, setFavorite] = useState<boolean>(note.favorite);
+
+  async function handleCreateNote() {
+    try {
+      await postNote(note);
+      setNote(initialNoteState);
+      setFavorite(false);
+      props.setUpdate((update) => !update);
+      if (textareaRef.current) textareaRef.current.style.height = "15px";
+    } catch (err) {
+      console.log("Não foi possível criar a nota. Tente novamente.");
+    }
+  }
 
   function handleTextareaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     //adapt textarea height
@@ -33,24 +47,7 @@ export default function CreateNote(props: CreateNoteProps) {
       e.preventDefault();
 
       if (e.currentTarget.innerHTML) {
-        try {
-          await postNote(note);
-          setNote({
-            title: "",
-            content: "",
-            color: "#ffffff",
-            favorite: false,
-          });
-          props.setUpdate((update) => !update);
-
-          if (textareaRef.current) {
-            textareaRef.current.style.height = "15px";
-          }
-
-          setFavorite(false);
-        } catch (err) {
-          console.error(err);
-        }
+        handleCreateNote();
       }
     }
   }
