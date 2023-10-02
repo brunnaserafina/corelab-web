@@ -1,9 +1,9 @@
+import { useState } from "react";
+import { Search } from "../../components";
 import logo from "../../assets/images/logo.svg";
 import iconOut from "../../assets/images/icon-out.svg";
 import iconArrow from "../../assets/images/icon-arrow.svg";
-import Search from "../Search";
 import styles from "./Navbar.module.scss";
-import { useState } from "react";
 
 interface NavbarProps {
   onSearchChange: (search: string) => void;
@@ -41,14 +41,14 @@ export default function Navbar(props: NavbarProps) {
 
           <img
             src={iconOut}
-            alt="Ícone fechar"
+            alt="Ícone fechar Navbar"
             className={styles.Icon}
             onClick={() => setShowNavbar(false)}
           />
         </nav>
       ) : (
         <div className={styles.Logo} onClick={() => setShowNavbar(true)}>
-          <img src={iconArrow} alt="Logo Corelab" />
+          <img src={iconArrow} alt="Flecha para expandir Navbar" />
         </div>
       )}
     </>

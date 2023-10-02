@@ -1,7 +1,7 @@
-import styles from "./Search.module.scss";
-import iconSearch from "../../assets/images/icon-search.svg";
-import { DebounceInput } from "react-debounce-input";
 import { useState } from "react";
+import { DebounceInput } from "react-debounce-input";
+import iconSearch from "../../assets/images/icon-search.svg";
+import styles from "./Search.module.scss";
 
 interface ISearch {
   placeholder: string;
