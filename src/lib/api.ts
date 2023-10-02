@@ -2,7 +2,7 @@ import axios from "axios";
 import INote from "../types/INote";
 
 const api = axios.create({
-  baseURL: "http://localhost:3333/api",
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api`,
 });
 
 export async function postNote(body: INote) {
