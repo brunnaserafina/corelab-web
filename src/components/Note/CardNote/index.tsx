@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import HeaderNote from "../HeaderNote";
+import { ConfirmModal, PaletteColors, ToolButton, HeaderNote } from "../../../components";
+import { deleteNote, editColorNote, editNote } from "../../../lib/api";
 import styles from "./CardNote.module.scss";
 import iconEdit from "../../../assets/images/icon-edit.svg";
 import iconColor from "../../../assets/images/icon-color.svg";
 import iconOut from "../../../assets/images/icon-out.svg";
 import INote from "../../../types/INote";
-import { deleteNote, editColorNote, editNote } from "../../../lib/api";
-import { colors } from "../../../utils/colors";
-import Modal from "react-modal";
 
 interface CardNoteProps {
   note: INote;
@@ -16,99 +14,104 @@ interface CardNoteProps {
 }
 
 export default function CardNote(props: CardNoteProps) {
-  const [edit, setEdit] = useState<boolean>(false);
-  const [showPallete, setShowPallete] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const palleteRef = useRef<HTMLDivElement | null>(null);
+  const paletteRef = useRef<HTMLDivElement | null>(null);
   const editColorRef = useRef<HTMLDivElement | null>(null);
 
+  const [edit, setEdit] = useState<boolean>(false);
+  const [showPalette, setShowPalette] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [favorite, setFavorite] = useState<boolean>(props.favorite);
+
   const [note, setNote] = useState<INote>({
-    id: props.note?.id,
-    title: props.note?.title,
-    content: props.note?.content,
+    ...props.note,
     favorite: props.favorite,
-    color: props.note?.color,
   });
 
-  const [favorite, setFavorite] = useState<boolean>(note.favorite);
-
   async function handleDeleteNote() {
-    if (props.note.id) {
-      await deleteNote(props.note.id);
-      props.setUpdate((update: boolean) => !update);
+    try {
+      if (props.note.id) {
+        await deleteNote(props.note.id);
+        props.setUpdate((update: boolean) => !update);
+      }
+    } catch (err) {
+      console.log("Não foi possível deletar a nota. Tente novamente.");
     }
   }
 
-  const activateEdit = async () => {
-    if (!edit) {
+  async function handleEditColorNote(color: string) {
+    const colorIsChanging = props.note.color !== color;
+
+    if (colorIsChanging && props.note.id) {
+      try {
+        setNote({ ...props.note, color });
+        await editColorNote(props.note.id, { ...props.note, color });
+        props.setUpdate((update) => !update);
+        setShowPalette(false);
+      } catch (err) {
+        console.log("Não foi possível alterar a cor da nota. Tente novamente.");
+      }
+    } else {
+      setShowPalette(false);
+    }
+  }
+
+  async function handleEditNote() {
+    if (props.note.content === note.content && props.note.title === note.title)
+      return;
+
+    try {
+      await editNote(note);
+      props.setUpdate((update) => !update);
+    } catch (err) {
+      console.log("Não foi possível editar a nota. Tente novamente.");
+    }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      setEdit(false);
+      handleEditNote();
+    }
+  }
+
+  const activateEditAndFocusTextarea = async () => {
+    if (edit) {
+      setEdit(false);
+      handleEditNote();
+    } else {
       await setEdit(true);
 
       if (textareaRef.current && !textareaRef.current.disabled) {
         const textLength = textareaRef.current.value.length;
-        textareaRef.current.setSelectionRange(textLength, textLength);
+        textareaRef.current.setSelectionRange(textLength, textLength); //positions the cursor at the end of the textarea
         textareaRef.current.focus();
-      }
-    } else {
-      await setEdit(false);
-      try {
-        await editNote(note);
-        props.setUpdate((update) => !update);
-      } catch (err) {
-        console.error(err);
       }
     }
   };
 
-  async function handleEditColorNote(color: string) {
-    const updatedNote = { ...props.note, color };
-    setNote(updatedNote);
-    setShowPallete(false);
-
-    try {
-      if (props.note.id) {
-        await editColorNote(props.note.id, updatedNote);
-        props.setUpdate((update) => !update);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-
-      try {
-        await editNote(note);
-        props.setUpdate((update) => !update);
-        setEdit(false);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-
+  ///closed palette if user click outside
   useEffect(() => {
-    function handleClickOutside(event: any) {
-      if (
-        palleteRef.current &&
+    function handleOutsideClick(event: MouseEvent) {
+      const clickedOutsidePalette =
+        paletteRef.current &&
+        !paletteRef.current.contains(event.target as Node);
+
+      const clickedOutsideEditColorIcon =
         editColorRef.current &&
-        !palleteRef.current.contains(event.target) &&
-        !editColorRef.current.contains(event.target)
-      ) {
-        setShowPallete(false);
+        !editColorRef.current.contains(event.target as Node);
+
+      if (clickedOutsidePalette && clickedOutsideEditColorIcon) {
+        setShowPalette(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleOutsideClick);
+
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, []);
+  }, [paletteRef, editColorRef]);
 
   return (
     <div style={{ backgroundColor: note.color }} className={styles.CardNote}>
@@ -133,33 +136,21 @@ export default function CardNote(props: CardNoteProps) {
 
         <div className={styles.Tools}>
           <span>
-            <span
-              style={{
-                backgroundColor: edit ? "#FFE3B3" : "transparent",
-              }}
-            >
-              <img
-                src={iconEdit}
-                alt="Editar nota"
-                title="Editar nota"
-                onClick={activateEdit}
-              />
-            </span>
-            <span
-              style={{
-                backgroundColor: showPallete ? "#FFE3B3" : "transparent",
-              }}
-              ref={editColorRef}
-            >
-              <img
-                src={iconColor}
-                alt="Colorir nota"
-                title="Colorir nota"
-                onClick={() => {
-                  setShowPallete(!showPallete);
-                }}
-              />
-            </span>
+            <ToolButton
+              active={edit}
+              onClick={activateEditAndFocusTextarea}
+              iconSrc={iconEdit}
+              altText="Editar nota"
+              titleText="Editar nota"
+            />
+            <ToolButton
+              refference={editColorRef}
+              active={showPalette}
+              onClick={() => setShowPalette(!showPalette)}
+              iconSrc={iconColor}
+              altText="Colorir nota"
+              titleText="Colorir nota"
+            />
           </span>
 
           <img
@@ -171,31 +162,19 @@ export default function CardNote(props: CardNoteProps) {
         </div>
       </div>
 
-      {showPallete && (
-        <div className={styles.Pallete} ref={palleteRef}>
-          {colors.map((color) => (
-            <span
-              key={color.code}
-              style={{ backgroundColor: color.code }}
-              title={color.name}
-              onClick={() => handleEditColorNote(color.code)}
-            ></span>
-          ))}
-        </div>
+      {showPalette && (
+        <PaletteColors
+          paletteRef={paletteRef}
+          handleEditColorNote={handleEditColorNote}
+        />
       )}
 
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        ariaHideApp={false}
-        className={styles.ModalDelete}
-      >
-        <h4>Tem certeza que deseja excluir essa nota?</h4>
-        <div>
-          <button onClick={closeModal}>cancelar</button>
-          <button onClick={handleDeleteNote}>excluir</button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        message="Tem certeza que deseja deletar essa nota?"
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+        confirmModal={handleDeleteNote}
+      />
     </div>
   );
 }
