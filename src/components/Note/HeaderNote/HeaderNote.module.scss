@@ -1,0 +1,36 @@
+.HeaderNote {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 25px 25px 0 0;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 5px 20px;
+  height: 40px;
+
+  img {
+    width: 20px;
+    cursor: pointer;
+  }
+
+  img:hover {
+    transform: scale(1.1);
+  }
+
+  input {
+    border: none;
+    background-color: transparent;
+    width: 100%;
+  }
+
+  h1,
+  input,
+  input::placeholder {
+    color: #333333;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  input:focus {
+    outline: none;
+  }
+}

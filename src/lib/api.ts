@@ -1,11 +1,46 @@
-const API = "http://localhost:3333";
+import axios from "axios";
+import INote from "../types/INote";
 
-const endpoint = (path: string): string => API + path;
+const api = axios.create({
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api`,
+});
 
-const get = async (path: string): Promise<any> => {
-  return fetch(endpoint(path)).then((res) => res.json());
-};
+export async function postNote(body: INote) {
+  const promise = await api.post("/notes", body);
+  return promise.data;
+}
 
-export const getVehicles = async () => {
-  return get("/vehicles");
-};
+export async function getOtherNotes() {
+  const promise = await api.get("/notes");
+  return promise.data;
+}
+
+export async function getFavoriteNotes() {
+  const promise = await api.get("/favorites");
+  return promise.data;
+}
+
+export async function deleteNote(id: string) {
+  const promise = await api.delete(`/notes/${String(id)}`);
+  return promise;
+}
+
+export async function editColorNote(id: string, note: INote) {
+  const promise = await api.put(`/notes/color/${id}`, { color: note.color });
+  return promise;
+}
+
+export async function deleteFavorite(note_id: string) {
+  const promise = await api.delete(`/favorites/${note_id}`);
+  return promise;
+}
+
+export async function postFavorite(note_id: string) {
+  const promise = await api.post(`/favorites/${note_id}`);
+  return promise;
+}
+
+export async function editNote(body: INote) {
+  const promise = await api.put("/notes", body);
+  return promise.data;
+}
