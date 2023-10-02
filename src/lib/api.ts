@@ -21,7 +21,6 @@ export async function getFavoriteNotes() {
 }
 
 export async function deleteNote(id: string) {
-  console.log(typeof id);
   const promise = await api.delete(`/notes/${String(id)}`);
   return promise;
 }
