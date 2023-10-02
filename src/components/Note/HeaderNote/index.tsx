@@ -1,5 +1,10 @@
 import star from "../../../assets/images/icon-star.svg";
-import { deleteFavorite, editNote,postFavorite, postNote } from "../../../lib/api";
+import {
+  deleteFavorite,
+  editNote,
+  postFavorite,
+  postNote,
+} from "../../../lib/api";
 import INote from "../../../types/INote";
 import starSolid from "../../../assets/images/icon-star-solid.svg";
 import styles from "./HeaderNote.module.scss";
@@ -27,7 +32,7 @@ export default function HeaderNote(props: HeaderNoteProps) {
         }
         props.setUpdate((update: boolean) => !update);
       } catch (error) {
-        console.log("Erro ao favoritar a nota. Tente novamente.")
+        //console.log("Erro ao favoritar a nota. Tente novamente.");
       }
     } else {
       const newFavoriteValue = !props.favorite;
@@ -53,7 +58,7 @@ export default function HeaderNote(props: HeaderNoteProps) {
       }
       props.setUpdate((update: boolean) => !update);
     } catch (error) {
-      console.error("Erro ao salvar a nota:", error);
+      //console.error("Erro ao salvar a nota:", error);
     }
   }
 
@@ -64,6 +69,7 @@ export default function HeaderNote(props: HeaderNoteProps) {
   async function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (props.note.content.length === 0) return;
       handleSaveNote();
     }
   }
@@ -83,6 +89,8 @@ export default function HeaderNote(props: HeaderNoteProps) {
         src={props.favorite ? starSolid : star}
         alt="Favoritar"
         title="Favoritar nota"
+        width="21"
+        height="19"
         onClick={handleFavoriteNote}
       />
     </div>

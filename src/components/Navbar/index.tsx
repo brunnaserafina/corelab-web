@@ -28,7 +28,7 @@ export default function Navbar(props: NavbarProps) {
       {showNavbar ? (
         <nav className={styles.Navbar}>
           <div>
-            <img src={logo} alt="Logo Corelab" />
+            <img src={logo} alt="Logo Corelab" width="38" height="38" />
 
             <p>CoreNotes</p>
 
@@ -43,12 +43,19 @@ export default function Navbar(props: NavbarProps) {
             src={iconOut}
             alt="Ícone fechar Navbar"
             className={styles.Icon}
+            width="16"
+            height="18"
             onClick={() => setShowNavbar(false)}
           />
         </nav>
       ) : (
-        <div className={styles.Logo} onClick={() => setShowNavbar(true)}>
-          <img src={iconArrow} alt="Flecha para expandir Navbar" />
+        <div className={styles.Arrow} onClick={() => setShowNavbar(true)}>
+          <img
+            src={iconArrow}
+            alt="Flecha para expandir Navbar"
+            width="20"
+            height="20"
+          />
         </div>
       )}
     </>

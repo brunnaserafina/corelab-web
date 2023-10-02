@@ -44,9 +44,9 @@ export default function Home() {
           setOtherNotes(otherNotesData);
         }
       } catch (err) {
-        console.log(
-          "Não foi possível carregar as notas. Recarrege a página e tente novamente.",
-        );
+        // console.log(
+        //   "Não foi possível carregar as notas. Recarrege a página e tente novamente.",
+        // );
       }
     }
     fetchData();

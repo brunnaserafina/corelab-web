@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { ConfirmModal, PaletteColors, ToolButton, HeaderNote } from "../../../components";
+import {
+  ConfirmModal,
+  PaletteColors,
+  ToolButton,
+  HeaderNote,
+} from "../../../components";
 import { deleteNote, editColorNote, editNote } from "../../../lib/api";
 import styles from "./CardNote.module.scss";
 import iconEdit from "../../../assets/images/icon-edit.svg";
@@ -35,7 +40,7 @@ export default function CardNote(props: CardNoteProps) {
         props.setUpdate((update: boolean) => !update);
       }
     } catch (err) {
-      console.log("Não foi possível deletar a nota. Tente novamente.");
+      //console.log("Não foi possível deletar a nota. Tente novamente.");
     }
   }
 
@@ -127,6 +132,7 @@ export default function CardNote(props: CardNoteProps) {
 
       <div className={styles.EditNote}>
         <textarea
+          aria-label="Campo de nota"
           ref={textareaRef}
           disabled={!edit}
           defaultValue={note.content}
@@ -157,6 +163,8 @@ export default function CardNote(props: CardNoteProps) {
             src={iconOut}
             alt="Excluir nota"
             title="Excluir nota"
+            width="14"
+            height="15"
             onClick={() => setModalIsOpen(true)}
           />
         </div>

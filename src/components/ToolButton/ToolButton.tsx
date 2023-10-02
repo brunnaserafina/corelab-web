@@ -13,11 +13,21 @@ export default function ToolButton({
   iconSrc,
   altText,
   titleText,
-  refference
+  refference,
 }: ToolButtonProps) {
   return (
-    <span style={{ backgroundColor: active ? "#FFE3B3" : "transparent" }} ref={refference}>
-      <img src={iconSrc} alt={altText} title={titleText} onClick={onClick} />
+    <span
+      style={{ backgroundColor: active ? "#FFE3B3" : "transparent" }}
+      ref={refference}
+    >
+      <img
+        src={iconSrc}
+        alt={altText}
+        title={titleText}
+        onClick={onClick}
+        width="18"
+        height="18"
+      />
     </span>
   );
 }

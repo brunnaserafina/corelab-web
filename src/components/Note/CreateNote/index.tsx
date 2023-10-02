@@ -65,6 +65,7 @@ export default function CreateNote(props: CreateNoteProps) {
 
       <div className={styles.WriteNote}>
         <textarea
+          aria-label="Campo para criar  nota"
           placeholder="Criar nota..."
           value={note.content}
           onChange={handleTextareaChange}

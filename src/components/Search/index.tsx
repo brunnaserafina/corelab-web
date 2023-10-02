@@ -20,6 +20,7 @@ const Search = (props: ISearch) => {
       onBlur={() => setIsFocused(false)}
     >
       <DebounceInput
+        aria-label="Campo para pesquisar notas"
         minLength={1}
         debounceTimeout={150}
         value={props.value}
@@ -27,7 +28,7 @@ const Search = (props: ISearch) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
       />
-      <img src={iconSearch} alt="Lupa" />
+      <img src={iconSearch} alt="Lupa" width="14" height="14" />
     </div>
   );
 };
