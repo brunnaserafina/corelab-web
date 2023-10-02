@@ -1,0 +1,50 @@
+@import "../../assets/styles/break-points.scss";
+@import "../../assets/styles/global-styles.scss";
+
+.Pallete {
+  background-color: white;
+  border-radius: 9px;
+  border: 1px solid #d9d9d9;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px;
+  box-sizing: border-box;
+  width: max-content;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  margin-left: 40px;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  height: max-content;
+  z-index: 2;
+  animation: fadeIn 0.25s ease-in-out;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  span {
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  @include desktop {
+    display: flex;
+  }
+}
