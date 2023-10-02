@@ -17,5 +17,5 @@ export {
   PaletteColors,
   Search,
   ToolButton,
-  colors,
+  colors
 };
